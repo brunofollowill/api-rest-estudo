@@ -1,10 +1,7 @@
 import { fastify } from "fastify";
-// import { DatabaseMemory } from "./database-memory.js";
 import { DatabasePostgres } from "./database-postgres.js";
 
 const server = fastify();
-
-// const database = new DatabaseMemory();
 const database = new DatabasePostgres();
 
 server.post("/videos", async (request, reply) => {
@@ -27,7 +24,7 @@ server.get("/videos", async (request) => {
 });
 
 server.put("/videos/:id", async (request, reply) => {
-  const videoId = request.params.id; // Corrigido para request.params.id
+  const videoId = request.params.id;
   const { title, description, duration } = request.body;
 
   await database.update(videoId, {
@@ -48,6 +45,8 @@ server.delete("/videos/:id", async (request, reply) => {
 });
 
 server.listen({
-  host: "0.0.0.0",
+  // host: "0.0.0.0",
+  // port: process.env.PORT ?? 3333,
   port: process.env.PORT ?? 3333,
+  host: "RENDER" in process.env ? `0.0.0.0` : `localhost`,
 });
